@@ -1,6 +1,6 @@
 # deno_twitter_oauth
 
-Twitter Oauth 1.0a API Module.
+Twitter Oauth 1.0a API Module.  
 reference by https://developer.twitter.com/en/docs/authentication/oauth-1-0a
 
 
@@ -9,8 +9,7 @@ reference by https://developer.twitter.com/en/docs/authentication/oauth-1-0a
 ## Simple get Auth Link
 
 ```ts
-import { getAuthenticateLink, type GetAuthLinkParam } from "./module/mod.ts";
-
+import { getAuthenticateLink, type GetAuthLinkParam } from "https://deno.land/x/twitter_oauth_1_0a@0.0.1/mod.ts";
 const params: GetAuthLinkParam = {
   oauthConsumerKey: "<Oauth Consumer Key>",
   oauthConsumerSecret: "<Oauth Consumer Secret>",
@@ -23,7 +22,7 @@ console.log(result.url);
 // => https://api.twitter.com/oauth/authenticate?oauth_token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-## Use on oak 
+## Use on oak (User Access Tokens (3-legged OAuth flow))
 
 ```ts
 import { Application, Router } from "https://deno.land/x/oak@v10.1.0/mod.ts";
@@ -34,7 +33,7 @@ import {
   getAuthenticateLink,
   type GetAuthLinkParam,
   stringQueryToObject,
-} from "./module/mod.ts";
+} from "https://deno.land/x/twitter_oauth_1_0a@0.0.1/mod.ts";
 
 import {
   statusHomeTimeline,
@@ -99,7 +98,7 @@ router.get("/oauth/callback", async (ctx) => {
     trim_user: true,
   });
 
-  // Post
+  // Post if get write permission
   await statusUpdate(dwitterParam, { status: "Post By Deno" });
 
   ctx.response.body = `Hello, ${accessToken.screen_name} from Twitter`;
