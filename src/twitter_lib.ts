@@ -98,17 +98,15 @@ export const buildSignatureBase = (params: BuildSignatureBaseParam): string => {
 
   (Object.keys(encodedParams) as (keyof typeof encodedParams)[]).forEach(
     (key) => {
-      //if(key === "method"){
-      //  return delete encodedParams[key]
-      //}
       encodedParams[key] = encodeURIComponent(encodedParams[key]);
     },
   );
+  
   const encordedJoindString = (
     Object.keys(encodedParams) as (keyof typeof encodedParams)[]
   )
-    .map((key) => `${snakeCase(key)}=${encodedParams[key]}`)
     .sort()
+    .map((key) => `${snakeCase(key)}=${encodedParams[key]}`)
     .join("&");
 
   const reEncordedJoindString = encodeURIComponent(encordedJoindString);
@@ -137,7 +135,6 @@ export const buildSignature = (params: BuildSignatureParam): string => {
       "oauthVersion",
       "oauthSignatureMethod",
       "method",
-      "oauthCallback",
     ])
   );
   const signatureBase = buildSignatureBase(baseParams);
@@ -172,8 +169,8 @@ export const buildHeaders = (params: BuildHeadersParam): Headers => {
   const joindParams = (
     Object.keys(targetObject) as (keyof typeof targetObject)[]
   )
-    .map((key) => `${snakeCase(key)}="${params[key]}"`)
     .sort()
+    .map((key) => `${snakeCase(key)}="${params[key]}"`)
     .join(", ");
 
   const headers = new Headers({
@@ -287,7 +284,7 @@ export const getAccessToken = async (
   );
 
   const defaultResponse = {
-    status: "fasle",
+    status: "false",
     oauth_token: "",
     oauth_token_secret: "",
     user_id: "",
