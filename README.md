@@ -11,7 +11,8 @@ reference by https://developer.twitter.com/en/docs/authentication/oauth-1-0a
 import {
   getAuthenticateLink,
   type GetAuthLinkParam,
-} from "https://deno.land/x/twitter_oauth_1_0a@0.0.1/mod.ts";
+} from "https://deno.land/x/twitter_oauth_1_0a@1.0.2/mod.ts";
+
 const params: GetAuthLinkParam = {
   oauthConsumerKey: "<Oauth Consumer Key>",
   oauthConsumerSecret: "<Oauth Consumer Secret>",
@@ -35,7 +36,7 @@ import {
   getAuthenticateLink,
   type GetAuthLinkParam,
   stringQueryToObject,
-} from "https://deno.land/x/twitter_oauth_1_0a@0.0.1/mod.ts";
+} from "https://deno.land/x/twitter_oauth_1_0a@1.0.2/mod.ts";
 
 import {
   statusHomeTimeline,
@@ -123,8 +124,7 @@ import {
   type GetAccessTokenParam,
   getPinAuthenticateLink,
   type GetPinAuthLinkParam,
-  //} from "https://deno.land/x/twitter_oauth_1_0a@0.0.1/mod.ts";
-} from "./deno_twitter_oauth/mod.ts";
+} from "https://deno.land/x/twitter_oauth_1_0a@1.0.2/mod.ts";
 
 import {
   statusHomeTimeline,
