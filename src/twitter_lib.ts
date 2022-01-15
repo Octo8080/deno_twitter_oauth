@@ -9,9 +9,12 @@ import {
 
 const requestTokenUrl = "https://api.twitter.com/oauth/request_token";
 
-export interface GetRequestTokenParam extends ObjectOfStringKey {
+export interface GetPinAuthLinkParam extends ObjectOfStringKey {
   oauthConsumerKey: string;
   oauthConsumerSecret: string;
+}
+
+export interface GetRequestTokenParam extends GetPinAuthLinkParam {
   oauthCallback: string;
 }
 
@@ -101,7 +104,7 @@ export const buildSignatureBase = (params: BuildSignatureBaseParam): string => {
       encodedParams[key] = encodeURIComponent(encodedParams[key]);
     },
   );
-  
+
   const encordedJoindString = (
     Object.keys(encodedParams) as (keyof typeof encodedParams)[]
   )
@@ -308,6 +311,7 @@ export const getAccessToken = async (
 interface GetAuthLinkResponse {
   status: boolean;
   url: string;
+  oauth_token: string;
   oauthTokenSecret: string;
 }
 
@@ -320,13 +324,14 @@ export const getAuthLink = async (
     !result.status || typeof result.oauth_token !== "string" ||
     typeof result.oauth_token_secret !== "string"
   ) {
-    return { status: false, url: "", oauthTokenSecret: "" };
+    return { status: false, url: "", oauth_token: "", oauthTokenSecret: "" };
   }
 
   return {
     status: true,
     url:
       `https://api.twitter.com/oauth/${mode}?oauth_token=${result.oauth_token}`,
+    oauth_token: result.oauth_token,
     oauthTokenSecret: result.oauth_token_secret,
   };
 };
@@ -341,6 +346,26 @@ export const getAuthenticateLink = async (
   params: GetAuthLinkParam,
 ): Promise<GetAuthLinkResponse> => {
   return await getAuthLink(params, "authenticate");
+};
+
+export const getPinAuthLink = async (
+  params: GetPinAuthLinkParam,
+  mode: "authorize" | "authenticate",
+): Promise<GetAuthLinkResponse> => {
+  const authParams = Object.assign(params, { oauthCallback: "oob" });
+  return await getAuthLink(authParams, mode);
+};
+
+export const getPinAuthorizeLink = async (
+  params: GetPinAuthLinkParam,
+): Promise<GetAuthLinkResponse> => {
+  return await getPinAuthLink(params, "authorize");
+};
+
+export const getPinAuthenticateLink = async (
+  params: GetPinAuthLinkParam,
+): Promise<GetAuthLinkResponse> => {
+  return await getPinAuthLink(params, "authenticate");
 };
 
 import { assertEquals } from "https://deno.land/std@0.65.0/testing/asserts.ts";

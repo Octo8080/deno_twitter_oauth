@@ -11,6 +11,10 @@ export {
   getAuthLink,
   type GetAuthLinkParam,
   getAuthorizeLink,
+  getPinAuthenticateLink,
+  getPinAuthLink,
+  type GetPinAuthLinkParam,
+  getPinAuthorizeLink,
   getRequestToken,
   type GetRequestTokenParam,
 } from "./src/twitter_lib.ts";
