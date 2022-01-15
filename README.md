@@ -11,7 +11,7 @@ reference by https://developer.twitter.com/en/docs/authentication/oauth-1-0a
 import {
   getAuthenticateLink,
   type GetAuthLinkParam,
-} from "https://deno.land/x/twitter_oauth_1_0a@1.0.2/mod.ts";
+} from "https://deno.land/x/twitter_oauth_1_0a@1.0.4/mod.ts";
 
 const params: GetAuthLinkParam = {
   oauthConsumerKey: "<Oauth Consumer Key>",
@@ -70,29 +70,30 @@ router.get("/login", async (ctx) => {
     urlResponse.url,
   );
 });
+
 router.get("/oauth/callback", async (ctx) => {
   const query = ctx.request.url.toString().split("?")[1];
 
   const oauthTokenSecret = await ctx.state.session.get("oauthTokenSecret");
 
-  const { oauth_token, oauth_verifier } = stringQueryToObject(query, {
-    oauth_token: "",
-    oauth_verifier: "",
+  const { oauthToken, oauthVerifier } = stringQueryToObject(query, {
+    oauthToken: "",
+    oauthVerifier: "",
   });
 
   const accessToken = await getAccessToken({
     oauthConsumerKey,
     oauthConsumerSecret,
-    oauthToken: oauth_token.toString(),
-    oauthVerifier: oauth_verifier.toString(),
+    oauthToken: oauthToken.toString(),
+    oauthVerifier: oauthVerifier.toString(),
     oauthTokenSecret,
   });
 
   const twitterParam = {
     consumerKey: oauthConsumerKey,
     consumerSecret: oauthConsumerSecret,
-    token: accessToken.oauth_token,
-    tokenSecret: accessToken.oauth_token_secret,
+    token: accessToken.oauthToken,
+    tokenSecret: accessToken.oauthTokenSecret,
   };
 
   // HomeTimeLine
@@ -101,10 +102,10 @@ router.get("/oauth/callback", async (ctx) => {
     trim_user: true,
   });
 
-  // Post if get write permission
+  // Post if has write permission
   await statusUpdate(dwitterParam, { status: "Post By Deno" });
 
-  ctx.response.body = `Hello, ${accessToken.screen_name} from Twitter`;
+  ctx.response.body = `Hello, ${accessToken.screenName} from Twitter`;
 });
 
 const app = new Application();
@@ -138,7 +139,9 @@ const authParam: GetPinAuthLinkParam = {
   oauthConsumerSecret,
 };
 
-const {url, oauth_token, oauthTokenSecret} = await getPinAuthenticateLink(authParam);
+const { url, oauthToken, oauthTokenSecret } = await getPinAuthenticateLink(
+  authParam,
+);
 
 console.log(`Please open to ${url}`);
 
@@ -151,18 +154,20 @@ if (typeof oauthVerifier !== "string") {
 const accessTokenParam: GetAccessTokenParam = {
   oauthConsumerKey,
   oauthConsumerSecret,
-  oauthToken: oauth_token,
+  oauthToken,
   oauthVerifier,
-  oauthTokenSecret: oauthTokenSecret,
+  oauthTokenSecret,
 };
 
 const accessToken = await getAccessToken(accessTokenParam);
 
+console.log(accessToken)
+
 const twitterParam = {
   consumerKey: oauthConsumerKey,
   consumerSecret: oauthConsumerSecret,
-  token: accessToken.oauth_token,
-  tokenSecret: accessToken.oauth_token_secret,
+  token: accessToken.oauthToken,
+  tokenSecret: accessToken.oauthTokenSecret,
 };
 
 // HomeTimeLine

@@ -1,3 +1,5 @@
+import { camelCase, snakeCase } from "https://deno.land/x/case@v2.1.0/mod.ts";
+
 export interface ObjectOfStringKey {
   [key: string]: string;
 }
@@ -9,19 +11,33 @@ export interface ObjectOfStringKeyAnyValue {
 export const stringValuesObjectToMultiValuesObject = (
   src: ObjectOfStringKey,
 ): ObjectOfStringKeyAnyValue => {
-  const result: ObjectOfStringKeyAnyValue = src;
+  const result: ObjectOfStringKeyAnyValue = {};
+
+  console.log("//////////////");
+  console.log(result);
 
   (Object.keys(src) as (keyof typeof src)[])
     .forEach((key) => {
-      if (["true", "false"].includes(src[key].toString().toLowerCase())) {
+      if (typeof key === "string") {
+        result[camelCase(key)] = src[key];
+      }
+    });
+  
+  console.log(result);
+
+  (Object.keys(result) as (keyof typeof result)[])
+    .forEach((key) => {
+      if (["true", "false"].includes(result[key].toString().toLowerCase())) {
         result[key] = result[key].toString().toLowerCase() === "true";
         return;
       }
-      if (!isNaN(Number(src[key]))) {
-        result[key] = parseInt(src[key]);
+      if (!isNaN(Number(result[key]))) {
+        result[key] = parseInt(result[key]);
         return;
       }
     });
+
+  console.log(result);
 
   return result;
 };
@@ -54,7 +70,7 @@ export const stringQueryToObject = <T>(
   const tmpObject: ObjectOfStringKey = Object.assign({}, requestObject);
 
   requestObjectkeys.forEach((p) => {
-    const item = splitedSrc.filter((item) => item[0] === p)[0];
+    const item = splitedSrc.filter((item) => camelCase(item[0]) === p)[0];
     if (!item) return;
 
     tmpObject[p] = item[1];
@@ -129,6 +145,18 @@ Deno.test({
     const testParam = { a: "", b: "", d: "" };
     const result = stringQueryToObject(testSrc, testParam);
     const testResult = { a: "AA", b: "BB", d: "DD" };
+
+    assertEquals(testResult, result);
+  },
+});
+
+Deno.test({
+  name: "test #6 stringQueryToObject - 4",
+  fn: () => {
+    const testSrc = "a_a=AA&b_b=BB&d_dd_dd=DD";
+    const testParam = { aA: "", bB: "", dDdDd: "" };
+    const result = stringQueryToObject(testSrc, testParam);
+    const testResult = { aA: "AA", bB: "BB", dDdDd: "DD" };
 
     assertEquals(testResult, result);
   },

@@ -222,9 +222,9 @@ export const getRequestToken = async (
 
   const defaultResponse = {
     status: "false",
-    oauth_token: "",
-    oauth_token_secret: "",
-    oauth_callback_confirmed: "false",
+    oauthToken: "",
+    oauthTokenSecret: "",
+    oauthCallbackConfirmed: "false",
   };
 
   if (response.status !== 200) {
@@ -288,10 +288,10 @@ export const getAccessToken = async (
 
   const defaultResponse = {
     status: "false",
-    oauth_token: "",
-    oauth_token_secret: "",
-    user_id: "",
-    screen_name: "",
+    oauthToken: "",
+    oauthTokenSecret: "",
+    userId: "",
+    screenName: "",
   };
 
   if (response.status !== 200) {
@@ -311,7 +311,7 @@ export const getAccessToken = async (
 interface GetAuthLinkResponse {
   status: boolean;
   url: string;
-  oauth_token: string;
+  oauthToken: string;
   oauthTokenSecret: string;
 }
 
@@ -321,18 +321,18 @@ export const getAuthLink = async (
 ): Promise<GetAuthLinkResponse> => {
   const result = await getRequestToken(params);
   if (
-    !result.status || typeof result.oauth_token !== "string" ||
-    typeof result.oauth_token_secret !== "string"
+    !result.status || typeof result.oauthToken !== "string" ||
+    typeof result.oauthTokenSecret !== "string"
   ) {
-    return { status: false, url: "", oauth_token: "", oauthTokenSecret: "" };
+    return { status: false, url: "", oauthToken: "", oauthTokenSecret: "" };
   }
 
   return {
     status: true,
     url:
-      `https://api.twitter.com/oauth/${mode}?oauth_token=${result.oauth_token}`,
-    oauth_token: result.oauth_token,
-    oauthTokenSecret: result.oauth_token_secret,
+      `https://api.twitter.com/oauth/${mode}?oauth_token=${result.oauthToken}`,
+    oauthToken: result.oauthToken,
+    oauthTokenSecret: result.oauthTokenSecret,
   };
 };
 

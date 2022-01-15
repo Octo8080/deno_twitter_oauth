@@ -19,4 +19,8 @@ export {
   type GetRequestTokenParam,
 } from "./src/twitter_lib.ts";
 
-export { selectObject, stringQueryToObject } from "./src/util.ts";
+export {
+  selectObject,
+  stringQueryToObject,
+  stringValuesObjectToMultiValuesObject,
+} from "./src/util.ts";
