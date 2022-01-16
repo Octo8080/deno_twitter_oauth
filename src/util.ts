@@ -13,9 +13,6 @@ export const stringValuesObjectToMultiValuesObject = (
 ): ObjectOfStringKeyAnyValue => {
   const result: ObjectOfStringKeyAnyValue = {};
 
-  console.log("//////////////");
-  console.log(result);
-
   (Object.keys(src) as (keyof typeof src)[])
     .forEach((key) => {
       if (typeof key === "string") {
@@ -23,8 +20,6 @@ export const stringValuesObjectToMultiValuesObject = (
       }
     });
   
-  console.log(result);
-
   (Object.keys(result) as (keyof typeof result)[])
     .forEach((key) => {
       if (["true", "false"].includes(result[key].toString().toLowerCase())) {
@@ -36,8 +31,6 @@ export const stringValuesObjectToMultiValuesObject = (
         return;
       }
     });
-
-  console.log(result);
 
   return result;
 };
