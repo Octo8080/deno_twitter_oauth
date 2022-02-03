@@ -80,14 +80,14 @@ export interface GetAccessTokenParam extends ObjectOfStringKey {
   oauthTokenSecret: string;
 }
 
-export const buildSignatureKey = (params: BuildSignatureKeyParam): string => {
+export function buildSignatureKey(params: BuildSignatureKeyParam): string {
   const oauthTokenSecret = params.oauthTokenSecret === undefined
     ? ""
     : params.oauthTokenSecret;
   return `${params.oauthConsumerSecret}&${oauthTokenSecret}`;
-};
+}
 
-export const buildSignatureBase = (params: BuildSignatureBaseParam): string => {
+export function buildSignatureBase(params: BuildSignatureBaseParam): string {
   let encodedParams = <BuildSignatureEncordedBaseParams> (
     selectObject(params, [
       "oauthCallback",
@@ -121,9 +121,9 @@ export const buildSignatureBase = (params: BuildSignatureBaseParam): string => {
   }&${reEncordedJoindString}`;
 
   return keyBase;
-};
+}
 
-export const buildSignature = (params: BuildSignatureParam): string => {
+export function buildSignature(params: BuildSignatureParam): string {
   const keyParams = <BuildSignatureKeyParam> (
     selectObject(params, ["oauthConsumerSecret"])
   );
@@ -151,13 +151,13 @@ export const buildSignature = (params: BuildSignatureParam): string => {
   ).toString();
 
   return encodeURIComponent(signature);
-};
+}
 
 interface BuildHeadersParam extends ObjectOfStringKey {
   oauthSignature: string;
 }
 
-export const buildHeaders = (params: BuildHeadersParam): Headers => {
+export function buildHeaders(params: BuildHeadersParam): Headers {
   const targetObject = selectObject(params, [
     "oauthConsumerKey",
     "oauthTimestamp",
@@ -180,11 +180,11 @@ export const buildHeaders = (params: BuildHeadersParam): Headers => {
     Authorization: `OAuth ${joindParams}`,
   });
   return headers;
-};
+}
 
-export const getRequestToken = async (
+export async function getRequestToken(
   params: GetRequestTokenParam,
-): Promise<ObjectOfStringKeyAnyValue> => {
+): Promise<ObjectOfStringKeyAnyValue> {
   const oauthTimestamp: string = getTimestamp();
   const oauthNonce: string = getNonce();
 
@@ -239,22 +239,22 @@ export const getRequestToken = async (
   );
 
   return stringValuesObjectToMultiValuesObject(result);
-};
+}
 
-const getNonce = (): string => {
+function getNonce(): string {
   return crypto.randomUUID();
-};
+}
 
-const getTimestamp = (): string => {
+function getTimestamp(): string {
   return (new Date()).getTime().toString().substring(
     0,
     10,
   );
-};
+}
 
-export const getAccessToken = async (
+export async function getAccessToken(
   params: GetAccessTokenParam,
-): Promise<ObjectOfStringKeyAnyValue> => {
+): Promise<ObjectOfStringKeyAnyValue> {
   const oauthTimestamp: string = getTimestamp();
   const oauthNonce: string = getNonce();
 
@@ -306,7 +306,7 @@ export const getAccessToken = async (
   );
 
   return stringValuesObjectToMultiValuesObject(result);
-};
+}
 
 interface GetAuthLinkResponse {
   status: boolean;
@@ -315,10 +315,10 @@ interface GetAuthLinkResponse {
   oauthTokenSecret: string;
 }
 
-export const getAuthLink = async (
+export async function getAuthLink(
   params: GetAuthLinkParam,
   mode: "authorize" | "authenticate",
-): Promise<GetAuthLinkResponse> => {
+): Promise<GetAuthLinkResponse> {
   const result = await getRequestToken(params);
   if (
     !result.status || typeof result.oauthToken !== "string" ||
@@ -334,39 +334,39 @@ export const getAuthLink = async (
     oauthToken: result.oauthToken,
     oauthTokenSecret: result.oauthTokenSecret,
   };
-};
+}
 
-export const getAuthorizeLink = async (
+export async function getAuthorizeLink(
   params: GetAuthLinkParam,
-): Promise<GetAuthLinkResponse> => {
+): Promise<GetAuthLinkResponse> {
   return await getAuthLink(params, "authorize");
-};
+}
 
-export const getAuthenticateLink = async (
+export async function getAuthenticateLink(
   params: GetAuthLinkParam,
-): Promise<GetAuthLinkResponse> => {
+): Promise<GetAuthLinkResponse> {
   return await getAuthLink(params, "authenticate");
-};
+}
 
-export const getPinAuthLink = async (
+export async function getPinAuthLink(
   params: GetPinAuthLinkParam,
   mode: "authorize" | "authenticate",
-): Promise<GetAuthLinkResponse> => {
+): Promise<GetAuthLinkResponse> {
   const authParams = Object.assign(params, { oauthCallback: "oob" });
   return await getAuthLink(authParams, mode);
-};
+}
 
-export const getPinAuthorizeLink = async (
+export async function getPinAuthorizeLink(
   params: GetPinAuthLinkParam,
-): Promise<GetAuthLinkResponse> => {
+): Promise<GetAuthLinkResponse> {
   return await getPinAuthLink(params, "authorize");
-};
+}
 
-export const getPinAuthenticateLink = async (
+export async function getPinAuthenticateLink(
   params: GetPinAuthLinkParam,
-): Promise<GetAuthLinkResponse> => {
+): Promise<GetAuthLinkResponse> {
   return await getPinAuthLink(params, "authenticate");
-};
+}
 
 import { assertEquals } from "https://deno.land/std@0.65.0/testing/asserts.ts";
 

@@ -161,7 +161,7 @@ const accessTokenParam: GetAccessTokenParam = {
 
 const accessToken = await getAccessToken(accessTokenParam);
 
-console.log(accessToken)
+console.log(accessToken);
 
 const twitterParam = {
   consumerKey: oauthConsumerKey,

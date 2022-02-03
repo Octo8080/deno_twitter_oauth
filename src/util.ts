@@ -19,7 +19,7 @@ export const stringValuesObjectToMultiValuesObject = (
         result[camelCase(key)] = src[key];
       }
     });
-  
+
   (Object.keys(result) as (keyof typeof result)[])
     .forEach((key) => {
       if (["true", "false"].includes(result[key].toString().toLowerCase())) {
