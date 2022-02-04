@@ -13,24 +13,22 @@ export const stringValuesObjectToMultiValuesObject = (
 ): ObjectOfStringKeyAnyValue => {
   const result: ObjectOfStringKeyAnyValue = {};
 
-  (Object.keys(src) as (keyof typeof src)[])
-    .forEach((key) => {
-      if (typeof key === "string") {
-        result[camelCase(key)] = src[key];
-      }
-    });
+  (Object.keys(src) as (keyof typeof src)[]).forEach((key) => {
+    if (typeof key === "string") {
+      result[camelCase(key)] = src[key];
+    }
+  });
 
-  (Object.keys(result) as (keyof typeof result)[])
-    .forEach((key) => {
-      if (["true", "false"].includes(result[key].toString().toLowerCase())) {
-        result[key] = result[key].toString().toLowerCase() === "true";
-        return;
-      }
-      if (!isNaN(Number(result[key]))) {
-        result[key] = parseInt(result[key]);
-        return;
-      }
-    });
+  (Object.keys(result) as (keyof typeof result)[]).forEach((key) => {
+    if (["true", "false"].includes(result[key].toString().toLowerCase())) {
+      result[key] = result[key].toString().toLowerCase() === "true";
+      return;
+    }
+    if (!isNaN(Number(result[key]))) {
+      result[key] = parseInt(result[key]);
+      return;
+    }
+  });
 
   return result;
 };
@@ -74,83 +72,85 @@ export const stringQueryToObject = <T>(
 
 import { assertEquals } from "https://deno.land/std@0.65.0/testing/asserts.ts";
 
-Deno.test({
-  name: "test #1 selectObject - 1",
-  fn: () => {
-    const testParam = { a: 1, b: 2, c: 3 };
-    const result = selectObject(testParam, ["a", "b"]);
-    const testResult = { a: 1, b: 2 };
+Deno.test("util", async (t) => {
+  await t.step({
+    name: "test #1 selectObject - 1",
+    fn: () => {
+      const testParam = { a: 1, b: 2, c: 3 };
+      const result = selectObject(testParam, ["a", "b"]);
+      const testResult = { a: 1, b: 2 };
 
-    assertEquals(testResult, result);
-  },
-});
+      assertEquals(testResult, result);
+    },
+  });
 
-Deno.test({
-  name: "test #2 selectObject - 2",
-  fn: () => {
-    const testParam = { a: 1, b: 2, c: 3 };
-    const result = selectObject(testParam, ["c"]);
-    const testResult = { c: 3 };
+  await t.step({
+    name: "test #2 selectObject - 2",
+    fn: () => {
+      const testParam = { a: 1, b: 2, c: 3 };
+      const result = selectObject(testParam, ["c"]);
+      const testResult = { c: 3 };
 
-    assertEquals(testResult, result);
-  },
-});
+      assertEquals(testResult, result);
+    },
+  });
 
-Deno.test({
-  name: "test #3 selectObject - 3",
-  fn: () => {
-    const testParam = { a: 1, b: 2, c: 3 };
-    const result = selectObject(testParam, []);
-    const testResult = {};
+  await t.step({
+    name: "test #3 selectObject - 3",
+    fn: () => {
+      const testParam = { a: 1, b: 2, c: 3 };
+      const result = selectObject(testParam, []);
+      const testResult = {};
 
-    assertEquals(testResult, result);
-  },
-});
+      assertEquals(testResult, result);
+    },
+  });
 
-Deno.test({
-  name: "test #4 stringQueryToObject - 1",
-  fn: () => {
-    const testSrc = "a=AA&b=BB&c=CC";
-    const testParam = { a: "", b: "", c: "" };
-    const result = stringQueryToObject(testSrc, testParam);
-    const testResult = { a: "AA", b: "BB", c: "CC" };
+  await t.step({
+    name: "test #4 stringQueryToObject - 1",
+    fn: () => {
+      const testSrc = "a=AA&b=BB&c=CC";
+      const testParam = { a: "", b: "", c: "" };
+      const result = stringQueryToObject(testSrc, testParam);
+      const testResult = { a: "AA", b: "BB", c: "CC" };
 
-    assertEquals(testResult, result);
-  },
-});
+      assertEquals(testResult, result);
+    },
+  });
 
-Deno.test({
-  name: "test #5 stringQueryToObject - 2",
-  fn: () => {
-    const testSrc = "a=AA&b=BB&d=DD";
-    const testParam = { a: "", b: "", c: "" };
-    const result = stringQueryToObject(testSrc, testParam);
-    const testResult = { a: "AA", b: "BB", c: "" };
+  await t.step({
+    name: "test #5 stringQueryToObject - 2",
+    fn: () => {
+      const testSrc = "a=AA&b=BB&d=DD";
+      const testParam = { a: "", b: "", c: "" };
+      const result = stringQueryToObject(testSrc, testParam);
+      const testResult = { a: "AA", b: "BB", c: "" };
 
-    assertEquals(testResult, result);
-  },
-});
+      assertEquals(testResult, result);
+    },
+  });
 
-Deno.test({
-  name: "test #6 stringQueryToObject - 3",
-  fn: () => {
-    const testSrc = "a=AA&b=BB&d=DD";
-    const testParam = { a: "", b: "", d: "" };
-    const result = stringQueryToObject(testSrc, testParam);
-    const testResult = { a: "AA", b: "BB", d: "DD" };
+  await t.step({
+    name: "test #6 stringQueryToObject - 3",
+    fn: () => {
+      const testSrc = "a=AA&b=BB&d=DD";
+      const testParam = { a: "", b: "", d: "" };
+      const result = stringQueryToObject(testSrc, testParam);
+      const testResult = { a: "AA", b: "BB", d: "DD" };
 
-    assertEquals(testResult, result);
-  },
-});
+      assertEquals(testResult, result);
+    },
+  });
 
-Deno.test({
-  name: "test #6 stringQueryToObject - 4",
-  fn: () => {
-    const testSrc = "a_a=AA&b_b=BB&d_dd_dd=DD";
-    const testParam = { aA: "", bB: "", dDdDd: "" };
-    const result = stringQueryToObject(testSrc, testParam);
-    const testResult = { aA: "AA", bB: "BB", dDdDd: "DD" };
+  await t.step({
+    name: "test #6 stringQueryToObject - 4",
+    fn: () => {
+      const testSrc = "a_a=AA&b_b=BB&d_dd_dd=DD";
+      const testParam = { aA: "", bB: "", dDdDd: "" };
+      const result = stringQueryToObject(testSrc, testParam);
+      const testResult = { aA: "AA", bB: "BB", dDdDd: "DD" };
 
-    assertEquals(testResult, result);
-  },
+      assertEquals(testResult, result);
+    },
+  });
 });

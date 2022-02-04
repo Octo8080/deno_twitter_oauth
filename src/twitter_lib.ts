@@ -370,58 +370,60 @@ export async function getPinAuthenticateLink(
 
 import { assertEquals } from "https://deno.land/std@0.65.0/testing/asserts.ts";
 
-Deno.test({
-  name: "test #1 buildSignatureBase",
-  fn: () => {
-    const testParam: BuildSignatureBaseParam = {
-      oauthConsumerKey: "xvz1evFS4wEEPTGEFPHBog",
-      oauthTimestamp: "1318622958",
-      oauthNonce: "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg",
-      oauthVersion: "1.0",
-      method: "Post",
-      oauthCallback: "oob",
-      oauthSignatureMethod: "HMAC-SHA1",
-    };
-    const testResult =
-      "POST&https%3A%2F%2Fapi.twitter.com%2Foauth%2Frequest_token&oauth_callback%3Doob%26oauth_consumer_key%3Dxvz1evFS4wEEPTGEFPHBog%26oauth_nonce%3DkYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1318622958%26oauth_version%3D1.0";
+Deno.test("twitter_lib", async (t) => {
+  await t.step({
+    name: "test #1 buildSignatureBase",
+    fn: () => {
+      const testParam: BuildSignatureBaseParam = {
+        oauthConsumerKey: "xvz1evFS4wEEPTGEFPHBog",
+        oauthTimestamp: "1318622958",
+        oauthNonce: "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg",
+        oauthVersion: "1.0",
+        method: "Post",
+        oauthCallback: "oob",
+        oauthSignatureMethod: "HMAC-SHA1",
+      };
+      const testResult =
+        "POST&https%3A%2F%2Fapi.twitter.com%2Foauth%2Frequest_token&oauth_callback%3Doob%26oauth_consumer_key%3Dxvz1evFS4wEEPTGEFPHBog%26oauth_nonce%3DkYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1318622958%26oauth_version%3D1.0";
 
-    const result = buildSignatureBase(testParam);
+      const result = buildSignatureBase(testParam);
 
-    assertEquals(testResult, result);
-  },
-});
+      assertEquals(testResult, result);
+    },
+  });
 
-Deno.test({
-  name: "test #2 buildSignatureKey",
-  fn: () => {
-    const testParam: BuildSignatureKeyParam = {
-      oauthConsumerSecret: "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw",
-    };
-    const testResult = "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw&";
+  await t.step({
+    name: "test #2 buildSignatureKey",
+    fn: () => {
+      const testParam: BuildSignatureKeyParam = {
+        oauthConsumerSecret: "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw",
+      };
+      const testResult = "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw&";
 
-    const result = buildSignatureKey(testParam);
+      const result = buildSignatureKey(testParam);
 
-    assertEquals(testResult, result);
-  },
-});
+      assertEquals(testResult, result);
+    },
+  });
 
-Deno.test({
-  name: "test #3 buildSignature",
-  fn: () => {
-    const testParam: BuildSignatureParam = {
-      method: "Post",
-      oauthConsumerKey: "xvz1evFS4wEEPTGEFPHBog",
-      oauthConsumerSecret: "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw",
-      oauthTimestamp: "1318622958",
-      oauthNonce: "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg",
-      oauthVersion: "1.0",
-      oauthCallback: "oob",
-      oauthSignatureMethod: "HMAC-SHA1",
-    };
-    const testResult = "KJmaxYxSHztR8Our3DFAqE2xBgw%3D";
+  await t.step({
+    name: "test #3 buildSignature",
+    fn: () => {
+      const testParam: BuildSignatureParam = {
+        method: "Post",
+        oauthConsumerKey: "xvz1evFS4wEEPTGEFPHBog",
+        oauthConsumerSecret: "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw",
+        oauthTimestamp: "1318622958",
+        oauthNonce: "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg",
+        oauthVersion: "1.0",
+        oauthCallback: "oob",
+        oauthSignatureMethod: "HMAC-SHA1",
+      };
+      const testResult = "KJmaxYxSHztR8Our3DFAqE2xBgw%3D";
 
-    const result = buildSignature(testParam);
+      const result = buildSignature(testParam);
 
-    assertEquals(testResult, result);
-  },
+      assertEquals(testResult, result);
+    },
+  });
 });
