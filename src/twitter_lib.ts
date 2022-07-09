@@ -88,7 +88,7 @@ export function buildSignatureKey(params: BuildSignatureKeyParam): string {
 }
 
 export function buildSignatureBase(params: BuildSignatureBaseParam): string {
-  let encodedParams = <BuildSignatureEncordedBaseParams> (
+  const encodedParams = <BuildSignatureEncordedBaseParams> (
     selectObject(params, [
       "oauthCallback",
       "oauthConsumerKey",
@@ -287,7 +287,7 @@ export async function getAccessToken(
   );
 
   const defaultResponse = {
-    status: "false",
+    status: false,
     oauthToken: "",
     oauthTokenSecret: "",
     userId: "",
@@ -302,7 +302,7 @@ export async function getAccessToken(
 
   const result = stringQueryToObject(
     responseText,
-    Object.assign(defaultResponse, { status: "true" }),
+    Object.assign(defaultResponse, { status: true }),
   );
 
   return stringValuesObjectToMultiValuesObject(result);

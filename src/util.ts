@@ -1,7 +1,7 @@
-import { camelCase, snakeCase } from "https://deno.land/x/case@v2.1.0/mod.ts";
+import { camelCase } from "../deps.ts";
 
 export interface ObjectOfStringKey {
-  [key: string]: string;
+  [key: string]: string | number | boolean;
 }
 
 export interface ObjectOfStringKeyAnyValue {
